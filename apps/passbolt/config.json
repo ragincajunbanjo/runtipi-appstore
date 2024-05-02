@@ -1,0 +1,16 @@
+{
+    "name": "Passbolt",
+    "available": true,
+    "port": 3419,
+    "exposable": true,
+    "id": "passbolt",
+    "description": "Finally, a password manager built for organizations that take their security and privacy seriously. Passbolt is trusted by 15 000 of them worldwide, including F500 companies, the defense industry, universities, startups and many others.",
+    "tipi_version": 1,
+    "version": "4.7.0.1", 
+    "categories": ["utilities"],
+    "short_desc": "Security First, Open Source Password Manager",
+    "author": "Passbolt S.A.",
+    "source": "https://github.com/passbolt/passbolt_docker",
+    "website": "https://passbolt.com",
+    "form_fields": []
+  }

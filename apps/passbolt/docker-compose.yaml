@@ -1,0 +1,71 @@
+services:
+  passbolt:
+    container_name: passbolt
+    image: passbolt/passbolt:4.7.0-1-ce-non-root
+    restart: always
+    depends_on:
+      - passbolt_db
+    networks:
+      - tipi_main_network
+    environment:
+      - APP_FULL_BASE_URL=https://${APP_DOMAIN}
+      - DATASOURCES_DEFAULT_HOST="db"
+      - DATASOURCES_DEFAULT_USERNAME="passbolt"
+      - DATASOURCES_DEFAULT_PASSWORD="P4ssb0lt"
+      - DATASOURCES_DEFAULT_DATABASE="passbolt"
+    volumes:
+      - ${APP_DATA_DIR}/gpg:/etc/passbolt/gpg
+      - ${APP_DATA_DIR}/jwt:/etc/passbolt/jwt
+    command:
+      [
+        "/usr/bin/wait-for.sh",
+        "-t",
+        "0",
+        "db:3306",
+        "--",
+        "/docker-entrypoint.sh",
+      ]
+    ports:
+     - ${APP_PORT}:3419
+    labels:
+      # Main
+      traefik.enable: true
+      traefik.http.middlewares.passbolt-web-redirect.redirectscheme.scheme: https
+      traefik.http.services.passbolt.loadbalancer.server.port:
+        3419
+        # Web
+      traefik.http.routers.passbolt-insecure.rule: Host(`passbolt.${APP_DOMAIN}`)
+      traefik.http.routers.passbolt-insecure.entrypoints: web
+      traefik.http.routers.passbolt-insecure.service: passbolt
+      traefik.http.routers.passbolt-insecure.middlewares:
+        passbolt-web-redirect
+        # Websecure
+      traefik.http.routers.passbolt.rule: Host(`passbolt.${APP_DOMAIN}`)
+      traefik.http.routers.passbolt.entrypoints: websecure
+      traefik.http.routers.passbolt.service: passbolt
+      traefik.http.routers.passbolt.tls.certresolver:
+        myresolver
+        # Local domain
+      traefik.http.routers.passbolt-local-insecure.rule: Host(`passbolt.${LOCAL_DOMAIN}`)
+      traefik.http.routers.passbolt-local-insecure.entrypoints: web
+      traefik.http.routers.passbolt-local-insecure.service: passbolt
+      traefik.http.routers.passbolt-local-insecure.middlewares:
+        passbolt-web-redirect
+        # Local domain secure
+      traefik.http.routers.passbolt-local.rule: Host(`passbolt.${LOCAL_DOMAIN}`)
+      traefik.http.routers.passbolt-local.entrypoints: websecure
+      traefik.http.routers.passbolt-local.service: passbolt
+      traefik.http.routers.passbolt-local.tls: true   
+  passbolt_db:
+    container_name: passbolt_db
+    image: mariadb:10.6
+    restart: always
+    networks:
+      - tipi_main_network
+    environment:
+      MYSQL_ROOT_PASSWORD: "P4ssb0lt"
+      MYSQL_DATABASE: "passbolt"
+      MYSQL_USER: "passbolt"
+      MYSQL_PASSWORD: "P4ssb0lt"
+    volumes:
+      - ${APP_DATA_DIR}/data/db:/var/lib/mysql
