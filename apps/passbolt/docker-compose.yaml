@@ -21,7 +21,7 @@ services:
         "/usr/bin/wait-for.sh",
         "-t",
         "0",
-        "db:3306",
+        "passbolt_db:3306",
         "--",
         "/docker-entrypoint.sh",
       ]
@@ -31,28 +31,24 @@ services:
       # Main
       traefik.enable: true
       traefik.http.middlewares.passbolt-web-redirect.redirectscheme.scheme: https
-      traefik.http.services.passbolt.loadbalancer.server.port:
-        3419
-        # Web
-      traefik.http.routers.passbolt-insecure.rule: Host(`passbolt.${APP_DOMAIN}`)
+      traefik.http.services.passbolt.loadbalancer.server.port: 3419
+      # Web
+      traefik.http.routers.passbolt-insecure.rule: Host(`${APP_DOMAIN}`)
       traefik.http.routers.passbolt-insecure.entrypoints: web
       traefik.http.routers.passbolt-insecure.service: passbolt
-      traefik.http.routers.passbolt-insecure.middlewares:
-        passbolt-web-redirect
-        # Websecure
-      traefik.http.routers.passbolt.rule: Host(`passbolt.${APP_DOMAIN}`)
+      traefik.http.routers.passbolt-insecure.middlewares: passbolt-web-redirect
+      # Websecure
+      traefik.http.routers.passbolt.rule: Host(`${APP_DOMAIN}`)
       traefik.http.routers.passbolt.entrypoints: websecure
       traefik.http.routers.passbolt.service: passbolt
-      traefik.http.routers.passbolt.tls.certresolver:
-        myresolver
-        # Local domain
-      traefik.http.routers.passbolt-local-insecure.rule: Host(`passbolt.${LOCAL_DOMAIN}`)
+      traefik.http.routers.passbolt.tls.certresolver: myresolver
+      # Local domain
+      traefik.http.routers.passbolt-local-insecure.rule: Host(`${LOCAL_DOMAIN}`)
       traefik.http.routers.passbolt-local-insecure.entrypoints: web
       traefik.http.routers.passbolt-local-insecure.service: passbolt
-      traefik.http.routers.passbolt-local-insecure.middlewares:
-        passbolt-web-redirect
-        # Local domain secure
-      traefik.http.routers.passbolt-local.rule: Host(`passbolt.${LOCAL_DOMAIN}`)
+      traefik.http.routers.passbolt-local-insecure.middlewares: passbolt-web-redirect
+      # Local domain secure
+      traefik.http.routers.passbolt-local.rule: Host(`${LOCAL_DOMAIN}`)
       traefik.http.routers.passbolt-local.entrypoints: websecure
       traefik.http.routers.passbolt-local.service: passbolt
       traefik.http.routers.passbolt-local.tls: true   
