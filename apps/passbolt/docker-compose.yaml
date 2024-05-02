@@ -1,4 +1,18 @@
 services:
+    passbolt_db:
+    container_name: passbolt_db
+    image: mariadb:10.6
+    restart: always
+    networks:
+      - tipi_main_network
+    environment:
+      MYSQL_ROOT_PASSWORD: "P4ssb0lt"
+      MYSQL_DATABASE: "passbolt"
+      MYSQL_USER: "passbolt"
+      MYSQL_PASSWORD: "P4ssb0lt"
+    volumes:
+      - ${APP_DATA_DIR}/data/db:/var/lib/mysql
+      
   passbolt:
     container_name: passbolt
     image: passbolt/passbolt:4.7.0-1-ce-non-root
@@ -14,8 +28,8 @@ services:
       - DATASOURCES_DEFAULT_PASSWORD="P4ssb0lt"
       - DATASOURCES_DEFAULT_DATABASE="passbolt"
     volumes:
-      - ${APP_DATA_DIR}/gpg:/etc/passbolt/gpg
-      - ${APP_DATA_DIR}/jwt:/etc/passbolt/jwt
+      - ${APP_DATA_DIR}/data/gpg:/etc/passbolt/gpg
+      - ${APP_DATA_DIR}/data/jwt:/etc/passbolt/jwt
     command:
       [
         "/usr/bin/wait-for.sh",
@@ -52,16 +66,4 @@ services:
       traefik.http.routers.passbolt-local.entrypoints: websecure
       traefik.http.routers.passbolt-local.service: passbolt
       traefik.http.routers.passbolt-local.tls: true   
-  passbolt_db:
-    container_name: passbolt_db
-    image: mariadb:10.6
-    restart: always
-    networks:
-      - tipi_main_network
-    environment:
-      MYSQL_ROOT_PASSWORD: "P4ssb0lt"
-      MYSQL_DATABASE: "passbolt"
-      MYSQL_USER: "passbolt"
-      MYSQL_PASSWORD: "P4ssb0lt"
-    volumes:
-      - ${APP_DATA_DIR}/data/db:/var/lib/mysql
+
