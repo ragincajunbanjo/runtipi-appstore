@@ -1,7 +1,7 @@
 services:
   passbolt:
     container_name: passbolt
-    image: passbolt/passbolt:4.7.0-1-ce
+    image: passbolt/passbolt:4.7.0-1-ce-non-root
     restart: always
     depends_on:
       - passbolt_db
@@ -26,7 +26,7 @@ services:
         "/docker-entrypoint.sh",
       ]
     ports:
-     - ${APP_PORT}:443
+     - ${APP_PORT}:4433
     labels:
       # Main
       traefik.enable: true
