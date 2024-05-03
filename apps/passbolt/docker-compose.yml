@@ -22,7 +22,7 @@ services:
         "/usr/bin/wait-for.sh",
         "-t",
         "0",
-        "passbolt_db:3306",
+        "db:3306",
         "--",
         "/docker-entrypoint.sh",
       ]
@@ -53,7 +53,7 @@ services:
       traefik.http.routers.passbolt-local.entrypoints: websecure
       traefik.http.routers.passbolt-local.service: passbolt
       traefik.http.routers.passbolt-local.tls: true   
-  passbolt_db:
+  db:
     container_name: passbolt_db
     image: mariadb:10.6
     restart: always
