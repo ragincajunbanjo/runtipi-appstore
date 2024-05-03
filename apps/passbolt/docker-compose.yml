@@ -19,7 +19,7 @@ services:
       - ${APP_DATA_DIR}/data/jwt:/etc/passbolt/jwt
     command:
       [
-        "chown root:www-data -R /etc/passbolt &&/usr/bin/wait-for.sh",
+        "/usr/bin/wait-for.sh",
         "-t",
         "0",
         "passbolt_db:3306",
