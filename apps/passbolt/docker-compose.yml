@@ -3,7 +3,7 @@ services:
     container_name: passbolt
     image: passbolt/passbolt:4.7.0-1-ce
     restart: always
-    user: 0:33
+    user: 0:0
     depends_on:
       - passbolt_db
     networks:
