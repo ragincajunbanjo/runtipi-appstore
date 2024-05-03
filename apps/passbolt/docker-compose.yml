@@ -1,7 +1,7 @@
 services:
   passbolt:
     container_name: passbolt
-    image: passbolt/passbolt:4.7.0-1-ce-non-root
+    image: passbolt/passbolt:4.7.0-1-ce
     restart: always
     depends_on:
       - passbolt_db
